@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ExcelIME</string>
+    <string name="excel_input_label">ExcelVoiceInput</string>
+    <string name="settings_name">ExcelVoiceInput</string>
+    <string name="label_subtype_generic">%s</string>
+
+</resources>
