@@ -3,5 +3,6 @@
     <string name="excel_input_label">ExcelVoiceInput</string>
     <string name="settings_name">ExcelVoiceInput</string>
     <string name="label_subtype_generic">%s</string>
+    <string name="word_separators">\u0020.,;:!?\n()[]*&amp;@{}/&lt;&gt;_+=|&quot;</string>
 
 </resources>

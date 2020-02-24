@@ -48,7 +48,7 @@
 
     <Row>
         <Key
-            android:codes="47"
+            android:codes="42"
             android:keyEdgeFlags="left"
             android:keyLabel="*" />
         <Key
@@ -69,7 +69,7 @@
 
     <Row android:rowEdgeFlags="bottom">
         <Key
-            android:codes="49"
+            android:codes="47"
             android:keyEdgeFlags="left"
             android:keyLabel="/" />
 
