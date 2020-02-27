@@ -6,6 +6,7 @@ import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -191,17 +192,7 @@ public class ExcelInputMethod extends InputMethodService implements KeyboardView
     }
 
     private void handleCharacter(int primaryCode, int[] keyCodes) {
-        Log.i("TAG", "handleCharacter");
-
-        if (isInputViewShown()) {
-            if (mInputView.isShifted()) {
-                primaryCode = Character.toUpperCase(primaryCode);
-            }
-        }
-
-        getCurrentInputConnection().commitText(
-                String.valueOf((char) primaryCode), 1);
-
+        getCurrentInputConnection().commitText(String.valueOf((char) primaryCode), 1);
     }
 
     //Sends a sequence of characters to the listener.
@@ -261,7 +252,7 @@ public class ExcelInputMethod extends InputMethodService implements KeyboardView
         //自动停止录音，范围{0~10000}
         mIat.setParameter(SpeechConstant.VAD_EOS, "1000");
         //设置标点符号,设置为"0"返回结果无标点,设置为"1"返回结果有标点
-        mIat.setParameter(SpeechConstant.ASR_PTT, "1");
+        mIat.setParameter(SpeechConstant.ASR_PTT, "0");
     }
 
 
@@ -287,7 +278,7 @@ public class ExcelInputMethod extends InputMethodService implements KeyboardView
         Log.i("Tag", resultBuffer.toString());
 
         if (isPrint) {
-            getCurrentInputConnection().commitText(resultBuffer.toString(), 1);
+            parseString(resultBuffer.toString());
         }
     }
 
@@ -357,6 +348,97 @@ public class ExcelInputMethod extends InputMethodService implements KeyboardView
         mToast.show();
     }
 
+    private void parseString(String s) {
+        switch (s) {
+            case "全选":
+                inputControlShortCut(KeyEvent.KEYCODE_A);
+                break;
+            case "撤销":
+                inputControlShortCut(KeyEvent.KEYCODE_Z);
+                break;
+            case "粘贴":
+                inputControlShortCut(KeyEvent.KEYCODE_V);
+                break;
+            case "复制":
+                inputControlShortCut(KeyEvent.KEYCODE_C);
+                break;
+            case "全部删除":
+                inputControlShortCut(KeyEvent.KEYCODE_A);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                keyDownUp(KeyEvent.KEYCODE_FORWARD_DEL);
+                break;
+            case "自动求和":
+                inputAltShortCut(KeyEvent.KEYCODE_EQUALS);
+                break;
+            case "剪切":
+                inputControlShortCut(KeyEvent.KEYCODE_X);
+                break;
+            case "查找":
+                inputControlShortCut(KeyEvent.KEYCODE_F);
+                break;
+            default:
+                getCurrentInputConnection().commitText(s, 1);
+
+
+        }
+
+    }
+
+    private void inputControlShortCut(final int... keyEventCodes) {
+        new Thread() {
+            public void run() {
+
+                try {
+                    // 通过keycode来执行相应操作
+                    long  downTime= SystemClock.uptimeMillis();
+                    long  eventTime= downTime;
+                    for (int keyEventCode : keyEventCodes) {
+                        getCurrentInputConnection().sendKeyEvent(new KeyEvent(downTime, eventTime, KeyEvent.ACTION_DOWN, keyEventCode, 0, KeyEvent.META_CTRL_ON));
+                        getCurrentInputConnection().sendKeyEvent(new KeyEvent(downTime, eventTime, KeyEvent.ACTION_UP, keyEventCode, 0, KeyEvent.META_CTRL_ON));
+                    }
+
+
+                } catch (Exception e) {
+                    Log.e("wxception when onEvent:", e.toString());
+                }
+            }
+
+        }.start();
+
+//        for (int keyEventCode : keyEventCodes) {
+//            long downTime = SystemClock.uptimeMillis();
+//            long eventTime = downTime;
+//            getCurrentInputConnection().sendKeyEvent(new KeyEvent(downTime, eventTime, KeyEvent.ACTION_DOWN, keyEventCode, 0, KeyEvent.META_CTRL_ON));
+//            getCurrentInputConnection().sendKeyEvent(new KeyEvent(downTime, eventTime, KeyEvent.ACTION_UP, keyEventCode, 0, KeyEvent.META_CTRL_ON));
+//        }
+    }
+
+    private void inputAltShortCut(final int... keyEventCodes) {
+
+        new Thread() {
+            public void run() {
+
+                try {
+                    // 通过keycode来执行相应操作
+                    long  downTime= SystemClock.uptimeMillis();
+                    long  eventTime= downTime;
+                    for (int keyEventCode : keyEventCodes) {
+                        getCurrentInputConnection().sendKeyEvent(new KeyEvent(downTime, eventTime, KeyEvent.ACTION_DOWN, keyEventCode, 0, KeyEvent.META_ALT_ON));
+                        getCurrentInputConnection().sendKeyEvent(new KeyEvent(downTime, eventTime, KeyEvent.ACTION_UP, keyEventCode, 0, KeyEvent.META_ALT_ON));
+                    }
+
+
+                } catch (Exception e) {
+                    Log.e("wxception when onEvent:", e.toString());
+                }
+            }
+
+        }.start();
+    }
 }
 
 

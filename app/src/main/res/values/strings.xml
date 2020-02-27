@@ -6,5 +6,7 @@
     <string name="word_separators">\u0020.,;:!?\n()[]*&amp;@{}/&lt;&gt;_+=|&quot;</string>
     <string name="app_id">5e098817</string>
     <string name="text_begin">请开始说话…</string>
+    <string name="introduction">点击voice键后开始说话可进行语音输入，同时现在支持如下语音快捷键：复制、粘贴、剪切、全选、查找、撤销、全部删除、自动求和。使用前需前往设置-输入法中打开ExcelVoiceInput开关，并设置为首选输入法。</string>
+
 
 </resources>
